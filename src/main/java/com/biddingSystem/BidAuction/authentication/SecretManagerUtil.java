@@ -20,7 +20,7 @@ public class SecretManagerUtil {
 
     public String getUserPassword(String secretName) {
         SecretVersionName secretVersionName = SecretVersionName.of(gsmProjectId, secretName, "latest");
-        LOGGER.info("Fetching credentials from GSM");
+        LOGGER.info("Fetching credentials from GSM for secretName: {}", secretName);
         AccessSecretVersionResponse response = secretManagerServiceClient.accessSecretVersion(secretVersionName);
         LOGGER.info("Completed fetching credentials from GSM");
 

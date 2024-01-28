@@ -7,20 +7,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class BidController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BidController.class);
     private static final String TOKEN_NOT_VALID = "Token Not Valid";
-    private static final String INVALID_CREDENTIALS = "INVALID_CREDENTIALS";
     private static final String SUCCESS = "Success";
 
     private AuthenticationService authenticationService;
     private BidServiceImpl bidService;
+
+    @GetMapping("/")
+    public String hello() {
+        return "Service for placing bids for auction items.";
+    }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
@@ -29,8 +30,8 @@ public class BidController {
             String jwtToken = authenticationService.login(modifiedUserName, password);
             return new ResponseEntity<>(jwtToken, HttpStatus.OK);
         } catch (Exception ex) {
-            LOGGER.warn(INVALID_CREDENTIALS);
-            return new ResponseEntity<>(INVALID_CREDENTIALS, HttpStatus.UNAUTHORIZED);
+            LOGGER.error(ex.getMessage());
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 
